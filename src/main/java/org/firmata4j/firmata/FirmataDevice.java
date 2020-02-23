@@ -151,12 +151,15 @@ public class FirmataDevice implements IODevice {
              know the board is alive and ready to communicate.
              */
             try {
+            	this.pins.clear();
+				this.initializedPins.set(0);
                 parser.start();
                 transport.start();
                 sendMessage(FirmataMessageFactory.REQUEST_FIRMWARE);
             } catch (IOException ex) {
                 transport.stop();
                 parser.stop();
+                started.set(false);
                 throw ex;
             }
         }
@@ -317,6 +320,7 @@ public class FirmataDevice implements IODevice {
         sendMessage(FirmataMessageFactory.digitalReport(false));
         parser.stop();
         transport.stop();
+        started.set(false);
     }
 
     /**
